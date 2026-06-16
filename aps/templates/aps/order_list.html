@@ -90,16 +90,20 @@
     </div>
     <div class="order-card-grid">
       <div class="order-card-field">
-        <span class="field-label">Location</span>
+        <span class="field-label">Shop</span>
         <span class="field-value">{{ order.location_number|default:"—" }}</span>
       </div>
       <div class="order-card-field">
-        <span class="field-label">Quantity</span>
-        <span class="field-value">{{ order.quantity }}</span>
+        <span class="field-label">RMB</span>
+        <span class="field-value">{{ order.rmb }}</span>
       </div>
       <div class="order-card-field">
-        <span class="field-label">Price</span>
-        <span class="field-value">₹{{ order.price }}</span>
+        <span class="field-label">Value</span>
+        <span class="field-value">{{ order.exchange_value }}</span>
+      </div>
+      <div class="order-card-field">
+        <span class="field-label">Rupees</span>
+        <span class="field-value">₹{{ order.rupees }}</span>
       </div>
       <div class="order-card-field">
         <span class="field-label">Total</span>
@@ -137,9 +141,11 @@
         <tr>
           <th>#</th>
           <th>Product</th>
-          <th>Location</th>
+          <th>Shop</th>
           <th>Qty</th>
-          <th>Price</th>
+          <th>RMB</th>
+          <th>Value</th>
+          <th>Rupees</th>
           <th>Deposit</th>
           <th>Remaining</th>
           <th>Total</th>
@@ -156,7 +162,9 @@
           </td>
           <td><span class="loc-badge" style="background:var(--accent);color:#fff;padding:3px 10px;border-radius:6px;font-weight:600;font-size:.82rem;">{{ order.location_number|default:"—" }}</span></td>
           <td>{{ order.quantity }}</td>
-          <td class="fw-600">₹{{ order.price }}</td>
+          <td>{{ order.rmb }}</td>
+          <td>{{ order.exchange_value }}</td>
+          <td class="fw-600">₹{{ order.rupees }}</td>
           <td>₹{{ order.deposit }}</td>
           <td style="color:var(--amber);">₹{{ order.remaining_to_pay }}</td>
           <td class="fw-600" style="color:var(--green);">₹{{ order.total_amount }}</td>
@@ -238,12 +246,15 @@
         <input type="hidden" id="editOrderPk">
         <div class="row g-3">
           <div class="col-6"><label class="form-label fw-500">Quantity</label><input type="number" id="editQty" class="form-control form-control-lg" min="1"></div>
-          <div class="col-6"><label class="form-label fw-500">Price (₹)</label><input type="number" id="editPrice" class="form-control form-control-lg" step="0.01" min="0"></div>
+          <div class="col-6"></div>
+          <div class="col-4"><label class="form-label fw-500">RMB</label><input type="number" id="editRmb" class="form-control form-control-lg" step="0.01" min="0"></div>
+          <div class="col-4"><label class="form-label fw-500">Value</label><input type="number" id="editValue" class="form-control form-control-lg" step="0.01" min="0"></div>
+          <div class="col-4"><label class="form-label fw-500">Rupees</label><input type="number" id="editRupees" class="form-control form-control-lg" step="0.01" min="0" readonly></div>
           <div class="col-6"><label class="form-label fw-500">Deposit (₹)</label><input type="number" id="editDeposit" class="form-control form-control-lg" step="0.01" min="0"></div>
-          <div class="col-6"><label class="form-label fw-500">CBM</label><input type="number" id="editCbm" class="form-control form-control-lg" step="0.0001" min="0"></div>
+          <div class="col-6"><label class="form-label fw-500">1 Carton CBM</label><input type="number" id="editCbm" class="form-control form-control-lg" step="0.0001" min="0"></div>
           <div class="col-6"><label class="form-label fw-500">Pcs/Carton</label><input type="number" id="editCarton" class="form-control form-control-lg" min="0"></div>
           <div class="col-6"><label class="form-label fw-500">Order Date</label><input type="date" id="editDate" class="form-control form-control-lg"></div>
-          <div class="col-12"><label class="form-label fw-500">Location</label><input type="text" id="editLocNum" class="form-control form-control-lg"></div>
+          <div class="col-12"><label class="form-label fw-500">Shop</label><input type="text" id="editLocNum" class="form-control form-control-lg"></div>
           <div class="col-12"><label class="form-label fw-500">Remark</label><textarea id="editRemark" class="form-control" rows="2"></textarea></div>
         </div>
       </div>
@@ -306,14 +317,16 @@ document.querySelectorAll('.view-order-btn').forEach(btn=>{
         <div class="mb-3"><strong class="d-block mb-1" style="font-size:1.1rem;">${d.product_name}</strong>
         <span class="text-muted small">Created by: ${d.created_by} · ${d.created_at}</span></div>
         <div class="detail-grid mb-3">
-          <div class="spec-item"><span class="spec-label">Location</span><span class="spec-value">${d.location_number}</span></div>
+          <div class="spec-item"><span class="spec-label">Shop</span><span class="spec-value">${d.location_number}</span></div>
           <div class="spec-item"><span class="spec-label">Quantity</span><span class="spec-value">${d.quantity}</span></div>
-          <div class="spec-item"><span class="spec-label">Price</span><span class="spec-value">₹${d.price}</span></div>
+          <div class="spec-item"><span class="spec-label">RMB</span><span class="spec-value">${d.rmb}</span></div>
+          <div class="spec-item"><span class="spec-label">Value</span><span class="spec-value">${d.exchange_value}</span></div>
+          <div class="spec-item"><span class="spec-label">Rupees</span><span class="spec-value">₹${d.rupees}</span></div>
           <div class="spec-item"><span class="spec-label">Deposit</span><span class="spec-value">₹${d.deposit}</span></div>
           <div class="spec-item"><span class="spec-label">Remaining</span><span class="spec-value" style="color:var(--amber)">₹${d.remaining_to_pay}</span></div>
-          <div class="spec-item"><span class="spec-label">CBM</span><span class="spec-value">${d.cbm}</span></div>
+          <div class="spec-item"><span class="spec-label">1 Carton CBM</span><span class="spec-value">${d.cbm}</span></div>
           <div class="spec-item"><span class="spec-label">Pcs/Carton</span><span class="spec-value">${d.carton_piece}</span></div>
-          <div class="spec-item"><span class="spec-label">Total CBM</span><span class="spec-value">${d.total_cbm}</span></div>
+          <div class="spec-item"><span class="spec-label">Total 1 Carton CBM</span><span class="spec-value">${d.total_cbm}</span></div>
           <div class="spec-item"><span class="spec-label">Total Pieces</span><span class="spec-value">${d.total_pieces}</span></div>
           <div class="spec-item"><span class="spec-label">Order Date</span><span class="spec-value">${d.order_date}</span></div>
           <div class="spec-item"><span class="spec-label">Total Amount</span><span class="spec-value" style="color:var(--green);font-size:1.1rem;">₹${d.total_amount}</span></div>
@@ -321,6 +334,16 @@ document.querySelectorAll('.view-order-btn').forEach(btn=>{
         ${d.remark&&d.remark!=='—'?`<div><span class="spec-label d-block mb-1">Remark</span><div class="p-2 rounded" style="background:var(--surface-2);border:1px solid var(--border);font-size:.88rem;">${d.remark}</div></div>`:''}`;
     });
   });
+});
+
+// Live Rupees calc in edit modal
+function updateEditRupees(){
+  const rmb=parseFloat(document.getElementById('editRmb').value)||0;
+  const val=parseFloat(document.getElementById('editValue').value)||0;
+  document.getElementById('editRupees').value=(rmb*val).toFixed(2);
+}
+['editRmb','editValue'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',updateEditRupees);
 });
 
 // Edit Order
@@ -331,7 +354,9 @@ document.querySelectorAll('.edit-order-btn').forEach(btn=>{
     document.getElementById('editOrderPk').value=id;
     fetch(`/orders/${id}/edit/`).then(r=>r.json()).then(d=>{
       document.getElementById('editQty').value=d.quantity;
-      document.getElementById('editPrice').value=d.price;
+      document.getElementById('editRmb').value=d.rmb;
+      document.getElementById('editValue').value=d.exchange_value;
+      document.getElementById('editRupees').value=d.rupees;
       document.getElementById('editDeposit').value=d.deposit;
       document.getElementById('editCbm').value=d.cbm;
       document.getElementById('editCarton').value=d.carton_piece;
@@ -350,7 +375,10 @@ document.getElementById('saveEditBtn').addEventListener('click',()=>{
   const fd=new FormData();
   fd.append('csrfmiddlewaretoken',CSRF);
   fd.append('quantity',document.getElementById('editQty').value);
-  fd.append('price',document.getElementById('editPrice').value);
+  fd.append('rmb',document.getElementById('editRmb').value||'0');
+  fd.append('exchange_value',document.getElementById('editValue').value||'0');
+  fd.append('rupees',document.getElementById('editRupees').value||'0');
+  fd.append('price',document.getElementById('editRupees').value||'0');
   fd.append('deposit',document.getElementById('editDeposit').value||'0');
   fd.append('cbm',document.getElementById('editCbm').value||'0');
   fd.append('carton_piece',document.getElementById('editCarton').value||'0');
