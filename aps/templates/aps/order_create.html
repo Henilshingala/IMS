@@ -203,7 +203,7 @@
               <span class="summary-value" id="sumDeposit">₹0.00</span>
             </div>
             <div class="summary-row">
-              <span class="summary-label">Remaining RMB</span>
+              <span class="summary-label">Remaining Rupees</span>
               <span class="summary-value summary-remaining" id="sumRemaining">₹0.00</span>
             </div>
             <div class="summary-row">
@@ -433,12 +433,13 @@ function updateSummary(){
   const totalRmb    = qty * rmb;
   const totalRupees = qty * rupees;
   const remaining   = totalRupees - deposit;
+  const totalPieces = qty * pcsPerCarton;
 
   document.getElementById('sumTotalCbm').textContent    = totalCbm.toFixed(4);
   document.getElementById('sumTotalRmb').textContent    = totalRmb.toFixed(2);
   document.getElementById('sumTotalRupees').textContent = `₹${fmt(totalRupees)}`;
   document.getElementById('sumTotalCartons').textContent = qty;
-  document.getElementById('sumCartonPieces').textContent = pcsPerCarton;
+  document.getElementById('sumCartonPieces').textContent = totalPieces;
   document.getElementById('sumDeposit').textContent     = `₹${fmt(deposit)}`;
   document.getElementById('sumRemaining').textContent   = `₹${fmt(remaining)}`;
   document.getElementById('sumTotalQty').textContent    = qty;
