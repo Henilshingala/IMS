@@ -15,7 +15,11 @@ class UserApprovalTests(TestCase):
         """Registering a new user should save them as inactive by default."""
         response = self.client.post(self.register_url, {
             'username': 'newuser',
+            'full_name': 'New User',
             'email': 'newuser@example.com',
+            'country_code': '+91',
+            'mobile_number': '9876543210',
+            'city': 'Mumbai',
             'password1': 'SecurePassword123!',
             'password2': 'SecurePassword123!',
         })
