@@ -487,7 +487,8 @@ class Order(models.Model):
         self.price = self.rupees
         self.total_cbm = self.quantity * self.cbm
         self.total_pieces = self.quantity * self.carton_piece
-        self.total_amount = self.quantity * self.rupees
+        effective_pieces = self.total_pieces if self.total_pieces > 0 else self.quantity
+        self.total_amount = effective_pieces * self.rupees
         self.remaining_to_pay = self.total_amount - self.deposit
         super().save(*args, **kwargs)
 

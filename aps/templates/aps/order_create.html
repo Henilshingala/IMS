@@ -430,10 +430,12 @@ function updateSummary(){
   document.getElementById('orderPrice').value = rupees ? rupees.toFixed(2) : '';
 
   const totalCbm    = qty * cbm;
-  const totalRmb    = qty * rmb;
-  const totalRupees = qty * rupees;
-  const remaining   = totalRupees - deposit;
   const totalPieces = qty * pcsPerCarton;
+  const effectivePieces = totalPieces > 0 ? totalPieces : qty;
+  
+  const totalRmb    = effectivePieces * rmb;
+  const totalRupees = effectivePieces * rupees;
+  const remaining   = totalRupees - deposit;
 
   document.getElementById('sumTotalCbm').textContent    = totalCbm.toFixed(4);
   document.getElementById('sumTotalRmb').textContent    = totalRmb.toFixed(2);
